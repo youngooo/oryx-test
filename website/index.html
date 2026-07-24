@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="OryxOS — Java-native, private and controllable AI Agent OS.">
+    <meta name="theme-color" content="#07111f">
+    <title>OryxOS — AI Agent OS</title>
+    <link rel="icon" href="assets/oryxos-logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="skip">跳到主要内容</a>
+<header class="site-header" id="top">
+    <nav class="nav shell" aria-label="Main navigation">
+        <a class="brand" href="#top" aria-label="OryxOS home"><img src="assets/oryxos-logo.svg" alt="" width="42" height="42"><span>Oryx<span class="brand-accent">OS</span></span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span><span class="sr-only" data-i18n="menu">打开菜单</span></button>
+        <div class="nav-links" id="nav-links">
+            <a href="#capabilities" data-i18n="navCapabilities">核心能力</a>
+            <a href="#architecture" data-i18n="navArchitecture">架构</a>
+            <a href="#quickstart" data-i18n="navQuickstart">快速开始</a>
+            <a href="#roadmap" data-i18n="navRoadmap">路线图</a>
+            <button class="language-toggle" type="button" aria-label="Switch language"><span class="language-active">中</span><span class="language-divider">/</span><span>EN</span></button>
+            <a class="nav-github" href="https://github.com/youngooo/oryx-test" target="_blank" rel="noreferrer">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .7a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2.23c-3.23.7-3.91-1.37-3.91-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.04 1.77 2.72 1.26 3.38.96.1-.75.4-1.26.74-1.55-2.58-.29-5.29-1.29-5.29-5.68 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.16 1.18a10.9 10.9 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.4-2.72 5.38-5.3 5.67.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg>
+                <span>GitHub</span>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<main id="main">
+    <section class="hero">
+        <div class="hero-grid" aria-hidden="true"></div><div class="hero-glow hero-glow-one" aria-hidden="true"></div><div class="hero-glow hero-glow-two" aria-hidden="true"></div>
+        <div class="shell hero-inner">
+            <div class="eyebrow reveal"><span class="status-dot"></span><span data-i18n="heroEyebrow">开源 · Java 原生 · 私有可控</span></div>
+            <h1 class="reveal"><span data-i18n="heroTitleLead">让每一个 Agent</span><br><span class="gradient-text" data-i18n="heroTitleAccent">可靠地运行起来</span></h1>
+            <p class="hero-copy reveal" data-i18n="heroCopy">OryxOS 是面向企业私有部署的 AI Agent 运行底座。一个自足目录定义一个 Agent，一套内核统一管理模型、推理、记忆、工具、会话与审计。</p>
+            <div class="hero-actions reveal">
+                <a class="button button-primary" href="#quickstart"><span data-i18n="getStarted">快速开始</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a>
+                <a class="button button-secondary" href="https://github.com/youngooo/oryx-test" target="_blank" rel="noreferrer"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .7a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2.23c-3.23.7-3.91-1.37-3.91-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.04 1.77 2.72 1.26 3.38.96.1-.75.4-1.26.74-1.55-2.58-.29-5.29-1.29-5.29-5.68 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.16 1.18a10.9 10.9 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.4-2.72 5.38-5.3 5.67.42.36.79 1.07.79 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg><span data-i18n="viewGithub">查看 GitHub</span></a>
+            </div>
+            <div class="runtime-visual reveal" aria-label="OryxOS runtime flow">
+                <div class="runtime-topline"><div class="window-dots"><i></i><i></i><i></i></div><span>oryxos / runtime</span><span class="runtime-live"><i></i><span data-i18n="runtimeReady">READY</span></span></div>
+                <div class="runtime-canvas">
+                    <div class="runtime-node node-trigger"><span class="node-icon">01</span><div><strong data-i18n="runtimeTrigger">统一触发</strong><small>CLI · API · CRON</small></div></div>
+                    <div class="runtime-link"><i></i><i></i><i></i></div>
+                    <div class="runtime-node node-engine"><img src="assets/oryxos-logo.svg" alt="" width="50" height="50"><div><strong>ReAct Engine</strong><small>REASON · ACT · OBSERVE</small></div></div>
+                    <div class="runtime-link"><i></i><i></i><i></i></div>
+                    <div class="runtime-node node-capability"><span class="node-icon">03</span><div><strong data-i18n="runtimeCapability">受控能力</strong><small>MODEL · MEMORY · TOOL</small></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="metrics" aria-label="Project facts"><div class="shell metrics-grid">
+        <div><strong>9</strong><span data-i18n="metricModules">Maven 模块</span></div><div><strong>1</strong><span data-i18n="metricJar">可执行 JAR</span></div><div><strong>3</strong><span data-i18n="metricTriggers">统一触发入口</span></div><div><strong>21</strong><span data-i18n="metricJava">Java 基线</span></div>
+    </div></section>
+
+    <section class="section" id="capabilities"><div class="shell">
+        <div class="section-heading reveal"><span class="section-kicker" data-i18n="capKicker">CORE RUNTIME</span><h2 data-i18n="capTitle">五大能力，一个运行内核</h2><p data-i18n="capCopy">业务 Agent 只描述任务和边界；重复、复杂的运行基础设施由 OryxOS 统一提供。</p></div>
+        <div class="capability-grid">
+            <article class="capability-card featured reveal"><div class="capability-number">01</div><div class="capability-icon icon-purple">AI</div><h3>Provider</h3><p data-i18n="providerCopy">通过显式映射接入 DeepSeek、Kimi 与 OpenAI-compatible 模型，保持模型选择清晰、可控。</p><span class="card-label">MODEL ROUTING</span></article>
+            <article class="capability-card reveal"><div class="capability-number">02</div><div class="capability-icon icon-blue">↻</div><h3>ReAct</h3><p data-i18n="reactCopy">自研 Reason → Act → Observe 循环，统一完成上下文组装、模型调用和工具结果回填。</p><span class="card-label">CONTROLLED LOOP</span></article>
+            <article class="capability-card reveal"><div class="capability-number">03</div><div class="capability-icon icon-cyan">◇</div><h3>Memory</h3><p data-i18n="memoryCopy">以统一门面管理会话记忆和长期记忆，让 Agent 跨会话保留真正有价值的上下文。</p><span class="card-label">CONTEXT STORE</span></article>
+            <article class="capability-card reveal"><div class="capability-number">04</div><div class="capability-icon icon-orange">{ }</div><h3>Tool</h3><p data-i18n="toolCopy">内置 Tool、MCP Tool 与 Java Tool 统一注册，并在白名单 Sandbox 中执行和审计。</p><span class="card-label">SAFE EXECUTION</span></article>
+            <article class="capability-card reveal"><div class="capability-number">05</div><div class="capability-icon icon-green">↗</div><h3>Web Service</h3><p data-i18n="webCopy">通过稳定 REST API 把 Agent 能力接入业务系统，与 CLI 和定时任务复用同一执行链路。</p><span class="card-label">ONE SERVICE PATH</span></article>
+        </div>
+    </div></section>
+
+    <section class="section architecture-section" id="architecture"><div class="shell architecture-layout">
+        <div class="architecture-copy reveal"><span class="section-kicker" data-i18n="archKicker">DESIGNED AS A SYSTEM</span><h2 data-i18n="archTitle">统一入口，受控执行</h2><p data-i18n="archCopy">CLI、Web Service 与定时任务进入同一个 AgentService。ReAct 引擎按需调度 Provider、Memory 和 Tool，每一次关键调用都可被记录和审计。</p>
+            <ul class="architecture-list"><li><i>✓</i><span data-i18n="archItem1">同步阻塞核心链路，配合 Java 21 虚拟线程</span></li><li><i>✓</i><span data-i18n="archItem2">一目录一 Agent，定义可读、可维护、可版本管理</span></li><li><i>✓</i><span data-i18n="archItem3">路径、命令和域名白名单守住工具执行边界</span></li></ul>
+            <button class="text-button" type="button" data-open-architecture><span data-i18n="viewArchitecture">查看完整架构图</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="architecture-preview reveal"><div class="preview-bar"><span>ORYXOS / ARCHITECTURE</span><span class="preview-status"><i></i> SYSTEM VIEW</span></div><img src="assets/architecture.svg" alt="OryxOS architecture diagram" loading="lazy"><button type="button" data-open-architecture aria-label="Open architecture diagram"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 3 6 6m0-6v6h-6M9 21l-6-6m0 6v-6h6"/></svg></button></div>
+    </div></section>
+
+    <section class="section agent-section"><div class="shell">
+        <div class="section-heading reveal"><span class="section-kicker" data-i18n="agentKicker">ONE DIRECTORY, ONE AGENT</span><h2 data-i18n="agentTitle">Agent 应该像代码一样清晰</h2><p data-i18n="agentCopy">无需为每个 Agent 重写后端服务。一个自足目录承载任务定义、技能、脚本和参考资料。</p></div>
+        <div class="agent-demo reveal">
+            <div class="file-tree"><div class="tree-title"><span>⌄</span> .oryxos/agents/weather/</div><button class="tree-file active" data-file="agent"><i>MD</i> AGENT.md</button><button class="tree-file" data-file="skill"><i>MD</i> skills/clothing.md</button><button class="tree-file" data-file="script"><i>SH</i> scripts/notify.sh</button><button class="tree-file" data-file="reference"><i>MD</i> REFERENCE.md</button></div>
+            <div class="code-panel"><div class="code-tabs"><span id="active-file">AGENT.md</span><span class="code-language">MARKDOWN</span></div><pre><code id="agent-code"><span class="token-muted">---</span>
+<span class="token-key">name:</span> daily-weather
+<span class="token-key">provider:</span> deepseek
+<span class="token-key">tools:</span> [http_get, notify]
+<span class="token-key">schedule:</span> <span class="token-string">"0 30 7 * * *"</span>
+<span class="token-muted">---</span>
+
+<span class="token-title"># Daily Weather Agent</span>
+
+Check today's weather, create a practical
+outfit suggestion, then notify the user.</code></pre></div>
+            <div class="execution-flow"><div class="flow-title" data-i18n="executionFlow">执行链路</div><div class="flow-step active"><i>1</i><span><strong>Load</strong><small>AGENT.md + context</small></span></div><div class="flow-line"></div><div class="flow-step"><i>2</i><span><strong>Reason</strong><small>model + memory</small></span></div><div class="flow-line"></div><div class="flow-step"><i>3</i><span><strong>Act</strong><small>safe tool call</small></span></div><div class="flow-line"></div><div class="flow-step"><i>4</i><span><strong>Audit</strong><small>session + invocation</small></span></div></div>
+        </div>
+    </div></section>
+
+    <section class="section quickstart-section" id="quickstart"><div class="shell quickstart-layout">
+        <div class="quickstart-copy reveal"><span class="section-kicker" data-i18n="quickKicker">QUICK START</span><h2 data-i18n="quickTitle">从一个 JAR 开始</h2><p data-i18n="quickCopy">当前版本是可运行的工程骨架。使用 JDK 21 和 Maven 构建，即可启动官网及基础健康检查接口。</p><div class="notice"><span>i</span><p data-i18n="quickNotice">OryxOS 处于早期开发阶段，核心 Agent 运行能力仍在持续实现，暂不建议用于生产环境。</p></div></div>
+        <div class="terminal reveal"><div class="terminal-bar"><div class="window-dots"><i></i><i></i><i></i></div><span>terminal</span><button class="copy-button" type="button" data-copy aria-label="Copy commands"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 8h11v11H8zM5 16H4V5h11v1"/></svg><span data-i18n="copy">复制</span></button></div><pre><code><span class="prompt">$</span> git clone https://github.com/youngooo/oryx-test.git
+<span class="prompt">$</span> cd oryx-test
+<span class="prompt">$</span> mvn clean package
+<span class="prompt">$</span> java -jar oryxos-boot/target/oryxos-boot-0.1.0-SNAPSHOT.jar
+
+<span class="terminal-comment"># http://localhost:8080</span>
+<span class="terminal-success">✓ OryxOS is running</span></code></pre></div>
+    </div></section>
+
+    <section class="section roadmap-section" id="roadmap"><div class="shell">
+        <div class="section-heading reveal"><span class="section-kicker" data-i18n="roadmapKicker">ROADMAP</span><h2 data-i18n="roadmapTitle">从骨架到可靠运行时</h2><p data-i18n="roadmapCopy">项目按纵向链路推进，每一阶段先形成可运行、可测试的结果。</p></div>
+        <div class="roadmap">
+            <article class="roadmap-item done reveal"><span>01</span><div><small data-i18n="roadmapDone">已完成</small><h3 data-i18n="roadmapFoundation">工程基础</h3><p data-i18n="roadmapFoundationCopy">九模块 Maven 工程、Boot 与 CLI 主入口、官网和基础 API。</p></div></article>
+            <article class="roadmap-item current reveal"><span>02</span><div><small data-i18n="roadmapCurrent">当前阶段</small><h3>Provider + ReAct</h3><p data-i18n="roadmapRuntimeCopy">打通模型接入、自研循环和最小 Agent 执行链路。</p></div></article>
+            <article class="roadmap-item reveal"><span>03</span><div><small data-i18n="roadmapNext">下一阶段</small><h3>Memory + Tool</h3><p data-i18n="roadmapCapabilityCopy">加入持久记忆、统一工具注册、Sandbox 和调用审计。</p></div></article>
+            <article class="roadmap-item reveal"><span>04</span><div><small data-i18n="roadmapLater">随后</small><h3>Web + Integration</h3><p data-i18n="roadmapIntegrationCopy">完善 REST API，跑通三个端到端 Agent 示例。</p></div></article>
+        </div>
+    </div></section>
+
+    <section class="cta-section"><div class="shell cta-inner reveal"><div><span class="section-kicker" data-i18n="ctaKicker">BUILD WITH US</span><h2 data-i18n="ctaTitle">一起构建可信赖的 Agent OS</h2><p data-i18n="ctaCopy">查看代码、阅读设计，或者从一个 Issue 开始参与 OryxOS。</p></div><a class="button button-light" href="https://github.com/youngooo/oryx-test" target="_blank" rel="noreferrer"><span data-i18n="exploreGithub">前往 GitHub</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></section>
+</main>
+
+<footer><div class="shell footer-grid">
+    <div class="footer-brand"><a class="brand" href="#top"><img src="assets/oryxos-logo.svg" alt="" width="42" height="42"><span>Oryx<span class="brand-accent">OS</span></span></a><p data-i18n="footerCopy">Java 原生、私有可控的 AI Agent OS。</p></div>
+    <div><h3 data-i18n="footerProject">项目</h3><a href="#capabilities" data-i18n="navCapabilities">核心能力</a><a href="#architecture" data-i18n="navArchitecture">架构</a><a href="#roadmap" data-i18n="navRoadmap">路线图</a></div>
+    <div><h3 data-i18n="footerResources">资源</h3><a href="https://github.com/youngooo/oryx-test/blob/main/README.md" target="_blank" rel="noreferrer" data-i18n="readme">README</a><a href="https://github.com/youngooo/oryx-test/tree/main/docs" target="_blank" rel="noreferrer" data-i18n="docs">设计文档</a><a href="https://github.com/youngooo/oryx-test/issues" target="_blank" rel="noreferrer">Issues</a></div>
+    <div><h3 data-i18n="footerCommunity">社区</h3><a href="https://github.com/youngooo/oryx-test" target="_blank" rel="noreferrer">GitHub</a><a href="https://github.com/youngooo/oryx-test/discussions" target="_blank" rel="noreferrer">Discussions</a></div>
+</div><div class="shell footer-bottom"><span>© 2026 OryxOS Contributors</span><span>Apache License 2.0</span></div></footer>
+
+<dialog class="architecture-dialog" aria-labelledby="architecture-dialog-title"><div class="dialog-bar"><strong id="architecture-dialog-title" data-i18n="fullArchitecture">OryxOS 完整架构</strong><button type="button" data-close-dialog aria-label="Close">×</button></div><img src="assets/architecture.svg" alt="OryxOS full architecture diagram"></dialog>
+<script src="app.js" defer></script>
+</body>
+</html>

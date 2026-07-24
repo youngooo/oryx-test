@@ -150,6 +150,8 @@ oryxos-cli
 oryxos-boot
 ```
 
+项目官网位于独立的 `website/` 目录，不属于 Maven 运行时模块，也不会被打包进 Boot JAR。
+
 ## 构建与运行
 
 ### 环境要求
@@ -229,6 +231,8 @@ oryxos chat --profile weather
 ```bash
 oryxos serve --port 8080
 ```
+
+OryxOS 中英文项目主页位于独立的 [`website/`](website/) 目录。进入该目录后可使用任意静态文件服务器运行，例如 `python -m http.server 8080`。
 
 完整的目标 CLI 契约见 [CLI 使用文档](docs/CliGuide.md)。
 
