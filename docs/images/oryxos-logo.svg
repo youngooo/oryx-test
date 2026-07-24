@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" role="img" aria-labelledby="title desc">
+  <title id="title">OryxOS logo</title>
+  <desc id="desc">A stylized oryx head formed by luminous horns, an agent core, and connected system nodes.</desc>
+
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="0.52" stop-color="#6D5DFC"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="horn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0EA5E9"/>
+      <stop offset="0.48" stop-color="#4F7CF7"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <radialGradient id="core" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.25" stop-color="#CFFAFE"/>
+      <stop offset="0.68" stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#6D5DFC"/>
+    </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#312E81" flood-opacity="0.18"/>
+    </filter>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Oryx / agent-system mark -->
+  <g transform="translate(26 26)" filter="url(#shadow)">
+    <rect x="0" y="0" width="308" height="308" rx="74" fill="#FFFFFF"/>
+    <rect x="9" y="9" width="290" height="290" rx="66" fill="url(#mark)" opacity="0.08"/>
+
+    <!-- Tall, swept oryx horns -->
+    <path d="M129 137 C104 108 88 77 91 44 C92 27 99 16 112 8 C106 37 113 62 130 83 C141 96 148 113 149 132"
+          fill="none" stroke="url(#horn)" stroke-width="15" stroke-linecap="round"/>
+    <path d="M179 137 C204 108 220 77 217 44 C216 27 209 16 196 8 C202 37 195 62 178 83 C167 96 160 113 159 132"
+          fill="none" stroke="url(#horn)" stroke-width="15" stroke-linecap="round"/>
+
+    <!-- Horn circuit bands -->
+    <path d="M103 65 L121 58 M108 89 L132 79 M205 65 L187 58 M200 89 L176 79"
+          fill="none" stroke="#E0F2FE" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- Head / operating-system shield -->
+    <path d="M154 105 C109 105 80 137 86 181 C91 221 117 255 154 274 C191 255 217 221 222 181 C228 137 199 105 154 105Z"
+          fill="url(#mark)"/>
+    <path d="M154 119 C120 119 98 143 102 177 C106 207 125 235 154 252 C183 235 202 207 206 177 C210 143 188 119 154 119Z"
+          fill="#172554" opacity="0.92"/>
+
+    <!-- Agent core and connected nodes -->
+    <path d="M119 175 H139 M169 175 H189 M154 140 V158 M154 192 V216"
+          fill="none" stroke="#93C5FD" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="111" cy="175" r="8" fill="#22D3EE"/>
+    <circle cx="197" cy="175" r="8" fill="#A78BFA"/>
+    <circle cx="154" cy="132" r="8" fill="#38BDF8"/>
+    <circle cx="154" cy="224" r="8" fill="#8B5CF6"/>
+    <circle cx="154" cy="175" r="23" fill="url(#core)" filter="url(#glow)"/>
+    <circle cx="154" cy="175" r="7" fill="#FFFFFF"/>
+
+    <!-- Small system/status lights -->
+    <circle cx="59" cy="250" r="7" fill="#22C55E"/>
+    <circle cx="80" cy="250" r="7" fill="#38BDF8"/>
+    <path d="M101 250 H125" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+</svg>

@@ -1,0 +1,22 @@
+# Maven
+target/
+**/target/
+
+# Local build toolchain
+.tools/
+
+# OryxOS runtime workspace
+.oryxos/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+

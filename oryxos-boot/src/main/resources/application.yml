@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: oryxos
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${ORYXOS_PORT:8080}
+
