@@ -1,0 +1,688 @@
+openapi: 3.1.0
+info:
+  title: OryxOS Core Runtime API
+  version: 1.0.0
+  description: >
+    Core-stage single-node API. All Agent execution paths converge on AgentService.
+    Authentication, RBAC, streaming, and schedule-management APIs are out of scope.
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Sessions
+  - name: Agents
+  - name: Profiles
+  - name: Memory
+  - name: Tools
+  - name: System
+paths:
+  /api/v1/sessions:
+    post:
+      tags: [Sessions]
+      operationId: createSession
+      summary: Create an active Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/sessions/{id}/messages:
+    post:
+      tags: [Sessions]
+      operationId: sendSessionMessage
+      summary: Execute one ordered Agent turn in an active Session
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        '200':
+          description: Agent turn completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTurnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Session is archived and cannot accept messages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          $ref: '#/components/responses/Timeout'
+  /api/v1/sessions/{id}:
+    get:
+      tags: [Sessions]
+      operationId: getSession
+      summary: Get bounded Session history and paginated LLM/Tool audit records
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - name: messageLimit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+        - name: llmOffset
+          in: query
+          required: false
+          description: Zero-based offset for LLM Call records.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: llmLimit
+          in: query
+          required: false
+          description: Maximum LLM Call records returned.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+        - name: toolOffset
+          in: query
+          required: false
+          description: Zero-based offset for Tool Invocation records.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: toolLimit
+          in: query
+          required: false
+          description: Maximum Tool Invocation records returned.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        '200':
+          description: Session found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionDetailResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Sessions]
+      operationId: archiveSession
+      summary: Archive a Session without deleting history or audits
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: Session archived; repeated calls are idempotent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/agents/{name}/invoke:
+    post:
+      tags: [Agents]
+      operationId: invokeAgent
+      summary: Invoke an Agent without requiring caller-managed conversation state
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvokeAgentRequest'
+      responses:
+        '200':
+          description: Invocation completed; an internal persisted Session was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTurnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '504':
+          $ref: '#/components/responses/Timeout'
+  /api/v1/profiles:
+    get:
+      tags: [Profiles]
+      operationId: listProfiles
+      summary: List Profiles derived from valid Agent directories
+      responses:
+        '200':
+          description: Profile list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileListResponse'
+  /api/v1/memory:
+    get:
+      tags: [Memory]
+      operationId: getMemory
+      summary: Read the shared long-term memory view from the configured backend
+      responses:
+        '200':
+          description: Long-term memory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/tools:
+    get:
+      tags: [Tools]
+      operationId: listTools
+      summary: List registered Tool metadata
+      responses:
+        '200':
+          description: Tool list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolListResponse'
+  /api/v1/health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Report runtime health
+      responses:
+        '200':
+          description: Runtime is healthy or degraded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Runtime is unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /api/v1/info:
+    get:
+      tags: [System]
+      operationId: getInfo
+      summary: Report safe runtime build and capability information
+      responses:
+        '200':
+          description: Runtime information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoResponse'
+components:
+  parameters:
+    SessionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    BadRequest:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Requested Session, Agent, Profile, or workspace resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Timeout:
+      description: Agent invocation exceeded the configured 60 second deadline
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    CreateSessionRequest:
+      type: object
+      additionalProperties: false
+      required: [profileName, channel, userId]
+      properties:
+        profileName:
+          type: string
+          minLength: 1
+          maxLength: 64
+        channel:
+          type: string
+          minLength: 1
+          maxLength: 32
+        userId:
+          type: string
+          minLength: 1
+          maxLength: 128
+    MessageRequest:
+      type: object
+      additionalProperties: false
+      required: [content]
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 32768
+    InvokeAgentRequest:
+      type: object
+      additionalProperties: false
+      required: [message]
+      properties:
+        message:
+          type: string
+          minLength: 1
+          maxLength: 32768
+        channel:
+          type: string
+          maxLength: 32
+          default: api
+        userId:
+          type: string
+          maxLength: 128
+          default: stateless
+    Message:
+      type: object
+      required: [messageId, sequence, role, content, createdAt]
+      properties:
+        messageId:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+          format: int64
+          minimum: 1
+        role:
+          type: string
+          enum: [SYSTEM, USER, ASSISTANT, TOOL]
+        content:
+          type: string
+        toolCallId:
+          type: [string, 'null']
+        toolName:
+          type: [string, 'null']
+        createdAt:
+          type: string
+          format: date-time
+    Session:
+      type: object
+      required:
+        [sessionId, profileName, channel, userId, messages, status, createdAt, lastActiveAt]
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+        profileName:
+          type: string
+        channel:
+          type: string
+        userId:
+          type: string
+        messages:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Message'
+        status:
+          type: string
+          enum: [ACTIVE, ARCHIVED]
+        createdAt:
+          type: string
+          format: date-time
+        lastActiveAt:
+          type: string
+          format: date-time
+        archivedAt:
+          type: [string, 'null']
+          format: date-time
+    SessionDetail:
+      allOf:
+        - $ref: '#/components/schemas/Session'
+        - type: object
+          required: [llmCalls, toolInvocations, llmCallsPage, toolInvocationsPage]
+          properties:
+            llmCalls:
+              type: array
+              maxItems: 100
+              description: Ordered by startedAt and id ascending within this page.
+              items:
+                $ref: '#/components/schemas/LlmCall'
+            toolInvocations:
+              type: array
+              maxItems: 100
+              description: Ordered by startedAt and id ascending within this page.
+              items:
+                $ref: '#/components/schemas/ToolInvocation'
+            llmCallsPage:
+              $ref: '#/components/schemas/PageMetadata'
+            toolInvocationsPage:
+              $ref: '#/components/schemas/PageMetadata'
+    PageMetadata:
+      type: object
+      required: [offset, limit, total]
+      properties:
+        offset:
+          type: integer
+          minimum: 0
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total:
+          type: integer
+          minimum: 0
+    LlmCall:
+      type: object
+      required:
+        [id, sessionId, provider, model, iteration, success, startedAt, completedAt, durationMs]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        provider:
+          type: string
+        model:
+          type: string
+        iteration:
+          type: integer
+          minimum: 1
+        promptTokens:
+          type: [integer, 'null']
+          minimum: 0
+        completionTokens:
+          type: [integer, 'null']
+          minimum: 0
+        success:
+          type: boolean
+        finishReason:
+          type: [string, 'null']
+        errorCode:
+          type: [string, 'null']
+        errorMessage:
+          type: [string, 'null']
+          description: Redacted safe detail only.
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        durationMs:
+          type: integer
+          format: int64
+          minimum: 0
+    ToolInvocation:
+      type: object
+      required:
+        [id, sessionId, toolName, arguments, success, retryable, startedAt, completedAt, durationMs]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        toolName:
+          type: string
+        arguments:
+          type: object
+          description: Redacted arguments safe for audit display.
+          additionalProperties: true
+        success:
+          type: boolean
+        resultSummary:
+          type: [string, 'null']
+        errorCode:
+          type: [string, 'null']
+        errorMessage:
+          type: [string, 'null']
+          description: Redacted safe detail only.
+        retryable:
+          type: boolean
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        durationMs:
+          type: integer
+          format: int64
+          minimum: 0
+    AgentTurn:
+      type: object
+      required: [sessionId, response, iterations, completedAt]
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+          description: Persisted Session used for history and audit correlation.
+        response:
+          type: string
+        iterations:
+          type: integer
+          minimum: 1
+          maximum: 10
+        terminationReason:
+          type: string
+          enum: [FINAL_RESPONSE, MAX_ITERATIONS, PROVIDER_ERROR, TOOL_ERROR, TIMEOUT]
+        completedAt:
+          type: string
+          format: date-time
+    Profile:
+      type: object
+      required: [name, provider, tools, channels, maxIterations]
+      properties:
+        name:
+          type: string
+        provider:
+          type: string
+        model:
+          type: [string, 'null']
+        tools:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        channels:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        scheduleCount:
+          type: integer
+          minimum: 0
+        maxIterations:
+          type: integer
+          minimum: 1
+          maximum: 10
+    MemoryDocument:
+      type: object
+      description: Backend-neutral long-term memory view returned by MemoryService.
+      required: [core, archival, lastModifiedAt]
+      properties:
+        core:
+          type: string
+        archival:
+          type: string
+        lastModifiedAt:
+          type: string
+          format: date-time
+    Tool:
+      type: object
+      required: [name, description, inputSchema, origin]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        inputSchema:
+          type: object
+          additionalProperties: true
+        origin:
+          type: string
+          enum: [BUILT_IN, MCP, JAVA_PLUGIN]
+        source:
+          type: string
+    Health:
+      type: object
+      required: [status, database, providers, loadedProfiles]
+      properties:
+        status:
+          type: string
+          enum: [UP, DEGRADED, DOWN]
+        database:
+          type: string
+          enum: [UP, DOWN]
+        providers:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [CONFIGURED, UNCONFIGURED, UNAVAILABLE]
+        loadedProfiles:
+          type: integer
+          minimum: 0
+        invalidProfiles:
+          type: integer
+          minimum: 0
+    Info:
+      type: object
+      required: [name, version, javaVersion, workspace, capabilities]
+      properties:
+        name:
+          type: string
+          const: OryxOS
+        version:
+          type: string
+        javaVersion:
+          type: string
+        workspace:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+    SessionResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Session'
+    SessionDetailResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/SessionDetail'
+    AgentTurnResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AgentTurn'
+    ProfileListResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Profile'
+    MemoryResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MemoryDocument'
+    ToolListResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tool'
+    HealthResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Health'
+    InfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Info'
+    Envelope:
+      type: object
+      required: [code, message, data, timestamp]
+      properties:
+        code:
+          type: string
+          example: OK
+        message:
+          type: string
+          example: success
+        data: {}
+        timestamp:
+          type: string
+          format: date-time
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/Envelope'
+        - type: object
+          properties:
+            code:
+              type: string
+              examples:
+                - VALIDATION_ERROR
+                - NOT_FOUND
+                - SESSION_ARCHIVED
+                - INVOCATION_TIMEOUT
+            data:
+              type: [object, 'null']
+              additionalProperties: true
