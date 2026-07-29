@@ -57,6 +57,30 @@
         <div><strong>9</strong><span data-i18n="metricModules">Maven 模块</span></div><div><strong>1</strong><span data-i18n="metricJar">可执行 JAR</span></div><div><strong>3</strong><span data-i18n="metricTriggers">统一触发入口</span></div><div><strong>21</strong><span data-i18n="metricJava">Java 基线</span></div>
     </div></section>
 
+    <section class="section" id="delivery-status"><div class="shell">
+        <div class="section-heading reveal">
+            <span class="section-kicker">DELIVERY STATUS</span>
+            <h2>Core runtime versus extension roadmap</h2>
+            <p>The implemented core exposes Provider, ReAct, Memory, Tool,
+                Session/audit and Scheduler capabilities through twelve CLI
+                commands and ten REST operations on one AgentService path.</p>
+        </div>
+        <div class="capability-grid">
+            <article class="capability-card reveal">
+                <h3>Implemented core</h3>
+                <p>Single-node private deployment, one executable JAR,
+                    DeepSeek/Kimi adapters, controlled Tool execution,
+                    persistent Sessions and public REST/CLI integration.</p>
+            </article>
+            <article class="capability-card reveal">
+                <h3>Extension stage</h3>
+                <p>Multi-tenancy, SSO/RBAC, cluster high availability,
+                    container or microVM isolation, vector retrieval and
+                    cross-node Agent collaboration remain roadmap items.</p>
+            </article>
+        </div>
+    </div></section>
+
     <section class="section" id="capabilities"><div class="shell">
         <div class="section-heading reveal"><span class="section-kicker" data-i18n="capKicker">CORE RUNTIME</span><h2 data-i18n="capTitle">五大能力，一个运行内核</h2><p data-i18n="capCopy">业务 Agent 只描述任务和边界；重复、复杂的运行基础设施由 OryxOS 统一提供。</p></div>
         <div class="capability-grid">

@@ -267,7 +267,7 @@ US-1 + US-2 完成后跑 `/speckit.analyze` 检查 spec 跟代码一致性。
 
 ### 4.3 US-3：Memory 三层记忆（核心能力三）
 
-**核心目标**：让 Agent 跨对话保留状态。核心阶段做极简版的两层（会话和长期），用一份 `MEMORY.md` 文件加两个内置 Tool 实现，让 Agent 主动写入和读取。
+**核心目标**：让 Agent 跨对话保留状态。核心阶段实现会话和长期两层，通过统一 `MemoryService` 门面组合上下文；长期记忆提供 Markdown（默认）、SQLite、自托管 Mem0 三档后端，并通过两个内置 Tool 让 Agent 主动写入和读取。情景记忆仍放扩展阶段。
 
 **涉及的 Maven 模块**：
 - `oryxos-memory`（核心能力三，含 `MemoryService` 三层门面、`LongTermMemory`、`MemoryTools`）
@@ -277,16 +277,16 @@ US-1 + US-2 完成后跑 `/speckit.analyze` 检查 spec 跟代码一致性。
 | Task 类别 | 主要内容 |
 |----------|---------|
 | `MemoryService` 门面类 | 三层统一门面，内部把会话记忆委托给 `SessionManager`、长期记忆委托给 `LongTermMemory` |
-| `LongTermMemory` 类 | `append`、`load`、`recallByKeyword`、`truncateIfNeeded` 四个方法，接口预留 `recall(mode)` 向量检索升级空间 |
+| `LongTermMemoryStore` 契约及实现 | 定义 `append`、`load`、`recallByKeyword` 共享语义，交付 Markdown、SQLite、自托管 Mem0 三档实现；OryxOS 进程内向量层放扩展 |
 | `MemoryTools` 类 | `save_memory` + `recall_memory` 两个内置 Tool，用 `@Tool` 注解 |
 | `PromptBuilder` 集成类 | 在 `PromptBuilder` 里通过 `MemoryService` 注入记忆，确保不破坏 US-2 跑通的 ReAct 循环 |
-| `MEMORY.md` 文件管理类 | 文件位置、格式约定、超长截断策略 |
+| Memory 后端一致性 | 核心/归档分区、超长截断、关键词召回、并发可见性和切换后上层契约不变 |
 
 US-3 实施完成后跑 `/speckit.analyze`。
 
 **阶段验收：跨对话记偏好**
 
-第一次对话告诉 Agent"我项目用 Spring Boot，部署在 K8s 上"，Agent 主动调 `save_memory` 追加到 `MEMORY.md`；重启 OryxOS 或新开会话；第二次对话问"帮我看看我的项目能用什么数据库"，Agent 在响应里引用之前记的偏好给出建议。
+第一次对话告诉 Agent"我项目用 Spring Boot，部署在 K8s 上"，Agent 主动调 `save_memory` 写入当前配置的长期记忆后端；重启 OryxOS 或新开会话；第二次对话问"帮我看看我的项目能用什么数据库"，Agent 在响应里引用之前记的偏好给出建议。该验收至少覆盖默认 Markdown 后端，三档后端再共享同一套契约验收。
 
 ---
 
@@ -327,6 +327,19 @@ US-4 实施完成后跑 `/speckit.analyze`。
 - 每日 GitHub 日报：Agent 通过 `shell` 执行自身 `scripts/` 目录中的脚本，以脚本输出作为确定性数据源。
 
 两条链路都必须经过 ToolRegistry、Sandbox 与调用审计。
+
+**当前状态（2026-07-29）：阶段验收已通过。**
+
+- `AgentResourceStageAcceptanceTest` 已验证科技日报依次经过
+  `read_file`、新闻 MCP 和注入 Prompt 的 Memory-only 标记，并生成包含
+  skill、新闻与 Memory 证据的日报。
+- 同一验收已验证 GitHub 日报经过真实 `ShellTool` 执行 Agent 自身
+  `scripts/github-digest.ps1`，并只使用脚本输出的唯一标记生成日报。
+- 两条链路均通过 `AgentService`、`ToolRegistry`、`WhitelistSandbox` 和
+  `InvocationAuditStore`；测试结果为 2 个测试全部通过。
+- 这是使用 deterministic Provider/news MCP stub 的内部阶段验收。定时触发、
+  公开人工补跑及 API 分页查询 Session/LLM/Tool 记录仍由 Final Phase
+  T111–T122 验收，不在此处提前标记完成。
 
 ---
 

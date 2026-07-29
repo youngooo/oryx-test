@@ -777,7 +777,7 @@ mvn clean package
 
 ### 第二周（3 小时）：核心能力三 + 能力四（Memory + Tool）
 
-- `MemoryService` 三层门面 + `LongTermMemory`（`MEMORY.md` 读写）、`save_memory` + `recall_memory`
+- `MemoryService` 三层门面 + `LongTermMemoryStore` 三档实现（Markdown 默认、SQLite、自托管 Mem0）、`save_memory` + `recall_memory`
 - `PromptBuilder` 加 Memory 注入
 - 文件 Tool + Shell Tool（`Sandbox` 接口 + `WhitelistSandbox` 应用层白名单）、`McpClientService`（连接外部 MCP server）
 - `ContextLoader` 加载 `AGENT.md` 正文（及 Agent 目录里的子指令按需读）
@@ -823,13 +823,13 @@ mvn clean package
 
 ## 15. 总结
 
-OryxOS 技术方案核心：**JDK 21 + Spring Boot 3.x** 单体应用，自实现 ReAct loop，基于 **Spring AI Alibaba** 做 LLM 调用（只用其协议转换和 schema 生成，不用其自动 tool 执行），SQLite 持久化加 `MEMORY.md` 文件，Picocli 命令行。
+OryxOS 技术方案核心：**JDK 21 + Spring Boot 3.x** 单体应用，自实现 ReAct loop，基于 **Spring AI Alibaba** 做 LLM 调用（只用其协议转换和 schema 生成，不用其自动 tool 执行），SQLite 持久化加可切换的长期记忆后端，Picocli 命令行。
 
 方案围绕五大核心能力展开：
 
 1. **能力一** 对接 LLM（Provider 抽象加显式 provider name 映射）
 2. **能力二** ReAct 循环（Agent 的大脑，引擎约数十行 Java）
-3. **能力三** Memory 三层记忆（统一门面，核心阶段 `MEMORY.md` 加两个内置 Tool，向量检索放扩展，接口预留升级空间）
+3. **能力三** Memory 三层记忆（统一门面，核心阶段提供 Markdown、SQLite、自托管 Mem0 三档长期记忆后端加两个内置 Tool；OryxOS 进程内自建向量层放扩展）
 4. **能力四** Tool 体系（内置 9 个 Tool 加 Plugin Tool 三档接入，主推 `AGENT.md` 目录 加 MCP 零代码，`NotifyTools` 对称补上出站通知能力，核心阶段 Tool 相关三合一为一个模块）
 5. **能力五** Web Service（REST API 六类操作核心 10 个端点，业务系统集成的唯一通道）
 
@@ -837,7 +837,7 @@ OryxOS 技术方案核心：**JDK 21 + Spring Boot 3.x** 单体应用，自实�
 
 实施按 4 周组织每周 3 小时：第一周对接 LLM + ReAct，第二周 Memory + Tool，第三周 Web Service，第四周多 Agent 演示 + 定时任务 + 工程化收尾。每周末有可演示成果，第四周末跑通三个验收 demo（每日天气、每日科技日报、每日 GitHub 日报），覆盖 Skill 渐进式披露的 L1/L2/L3 与能力复用。
 
-**存储选型：** 核心阶段 SQLite + `MEMORY.md` + 关键词检索跑通最短链路，向量检索放扩展（LanceDB Java GA、pgvector、JVector 三选一），`MemoryService` 接口预留升级空间。
+**存储选型：** 核心阶段 Session 与审计使用 SQLite；长期记忆通过 `LongTermMemoryStore` 在 Markdown（默认）、SQLite、自托管 Mem0 三档中选择并统一保持关键词检索契约。Mem0 可以在外部服务内部提供更强的语义匹配，但 OryxOS 进程内自建向量层仍放扩展（LanceDB Java GA、pgvector、JVector 三选一），`MemoryService` 以上不随后端变化。
 
 **承接定位：** 核心阶段交付运行时内核，能力上对齐业界开源 Agent OS 基础层，企业级治理差异化在扩展阶段补齐。架构上为治理层预留扩展点（Tool Policy、多租户、审计查询、SSO 都有对应的预留位置）。
 

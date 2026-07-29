@@ -1,6 +1,12 @@
 # Maven
 target/
 **/target/
+*.class
+*.jar
+*.log
+.env
+.env.*
+!.env.example
 
 # Local build toolchain
 .tools/
@@ -19,4 +25,3 @@ target/
 # OS
 .DS_Store
 Thumbs.db
-

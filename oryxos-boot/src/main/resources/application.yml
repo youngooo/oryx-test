@@ -4,7 +4,45 @@ spring:
   threads:
     virtual:
       enabled: true
+  datasource:
+    url: jdbc:sqlite:${oryxos.workspace}/oryxos.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
 
 server:
   port: ${ORYXOS_PORT:8080}
 
+oryxos:
+  workspace: ${ORYXOS_WORKSPACE:.oryxos}
+  provider:
+    deepseek:
+      base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+      api-key: ${DEEPSEEK_API_KEY:}
+      model: ${DEEPSEEK_MODEL:deepseek-v4-flash}
+    kimi:
+      base-url: ${KIMI_BASE_URL:https://api.moonshot.cn}
+      api-key: ${KIMI_API_KEY:${MOONSHOT_API_KEY:}}
+      model: ${KIMI_MODEL:kimi-k2.6}
+  memory:
+    backend: ${ORYXOS_MEMORY_BACKEND:markdown}
+    mem0:
+      base-url: ${MEM0_BASE_URL:http://localhost:8000}
+      api-key: ${MEM0_API_KEY:}
+  sandbox:
+    allowed-roots:
+      - ${oryxos.workspace}
+    allowed-http-hosts: ${ORYXOS_ALLOWED_HTTP_HOSTS:api.open-meteo.com}
+    allowed-commands: ${ORYXOS_ALLOWED_COMMANDS:}
+  mcp:
+    config: ${ORYXOS_MCP_CONFIG:.oryxos/mcp_servers.yaml}
+  scheduler:
+    enabled: ${ORYXOS_SCHEDULER_ENABLED:true}
+    zone: ${ORYXOS_TIME_ZONE:Asia/Shanghai}

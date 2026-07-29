@@ -1,0 +1,38 @@
+openapi: 3.0.3
+info:
+  title: OryxOS Web Info Hello
+  version: 0.1.0
+paths:
+  /api/v1/info:
+    get:
+      summary: Read OryxOS product information
+      operationId: getOryxOsInfo
+      responses:
+        "200":
+          description: OryxOS product information
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - name
+                  - stage
+                  - message
+                properties:
+                  name:
+                    type: string
+                    enum:
+                      - OryxOS
+                  stage:
+                    type: string
+                    enum:
+                      - project-initialization
+                  message:
+                    type: string
+                    enum:
+                      - Hello from OryxOS
+              example:
+                name: OryxOS
+                stage: project-initialization
+                message: Hello from OryxOS
